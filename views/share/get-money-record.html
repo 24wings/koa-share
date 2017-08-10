@@ -1,0 +1,31 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="tixiansm">
+        <p>温馨提示:提现若出现失败丶冻结丶拒付等情况，请用户及时联系平台客服，加<a href="">官方QQ群</a>找客服解决</p>
+    </div>
+    <div class="tixianye">
+        <div class="tixianye-box">
+            <span>余额:</span>
+            <p>￥{{user.totalMoney | money}}元</p>
+            <a href="/share/getMoney">提现</a>
+        </div>
+    </div>
+    <table class="biao1">
+        <tr>
+            <th>日期</th>
+            <th>类型</th>
+            <th>金额</th>
+            <th>状态</th>
+        </tr>
+        {%for record in getMoneyRecords%}
+        <tr>
+            <td>{{record.createDt | time}}</td>
+            <td>普通提现</td>
+            <td>{{record.money }}</td>
+            <td>{%if record.status ==1 %}已提现{%endif%}</td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+
+{%endblock%}

@@ -1,0 +1,45 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+        </div>
+    </div>
+    <div class="zuobi">
+        <p>————作弊会员公式————</p>
+        <span>小虾米`</span>
+        <span>月是故乡明</span>
+        <span>好好先生`</span>
+        <span>毕竟我不是你`</span>
+        <span>coiier`</span>
+        <span>金鱼的7秒记忆里`</span>
+    </div>
+    <div class="yue">
+        <b>￥{{user.totalMoney | money}}</b>
+        <span style="font-size:12px;"> {% if msg %}<b>{{msg}}</b>{%endif%}</span>
+    </div>
+    <form method="POST">
+        <div class="tixianfangshi1">
+            <div class="tixian-form">
+                <label for="">提现金额:</label>
+                <input type="number" name="money" placeholder="只要你有，都可提现(●'◡'●)" min="0" max="999" step="0.001">
+            </div>
+        </div>
+        <div class="tixianfangshi2">
+            <button type="submit">提现</button>
+        </div>
+    </form>
+</div>
+{% if user.isFinish | myFault %}
+<a href="/share/full-info">
+    <div class="tishi">
+        温馨提示:完善个人信息后才能提现哟！~
+    </div>
+</a>
+{%endif%} {%endblock%}

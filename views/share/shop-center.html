@@ -1,0 +1,45 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="title-box">
+        <div class="title">
+            广告数据
+        </div>
+    </div>
+    <div class="shuju">
+        <div class="shuju-box1">
+            <span class="money">{{user.totalMoney | money}}</span>
+            <span class="moneya">￥</span>
+        </div>
+        <div class="shuju-box">
+            <li>{{allTaskNum}}</li>
+            <span>已投放</span>
+        </div>
+        <div class="shuju-box">
+            <li>{{activeNum}}</li>
+            <span>已上架</span>
+        </div>
+        <div class="shuju-box">
+            <li>{{totalFee | money }}</li>
+            <span>广告历史总支出</span>
+        </div>
+        <div class="shuju-box">
+            <li>{{totalClickNum}}</li>
+            <span>累计点击量</span>
+        </div>
+    </div>
+    <ul class="liebiao">
+        <a href="/share/publish">
+            <li><i class="iconfont i1">&#xe607;</i><span>发布广告</span><i class="iconfont">&#xe621;</i></li>
+        </a>
+        <!--<a href=""><li><i class="iconfont i2">&#xe602;</i><span>添加广告</span><i class="iconfont">&#xe621;</i></li></a> -->
+        <a href="/share/task-list">
+            <li><i class="iconfont i3">&#xe774;</i><span>广告列表</span><i class="iconfont">&#xe621;</i></li>
+        </a>
+        <!-- <a href=""><li><i class="iconfont i4">&#xe659;</i><span>投放广告</span><i class="iconfont">&#xe621;</i></li></a> -->
+        <a href="/share/task-list?active=true">
+            <li><i class="iconfont i5">&#xe642;</i><span>已投放列表</span><i class="iconfont">&#xe621;</i></li>
+        </a>
+    </ul>
+</div>
+<div class="padding"></div>
+{%endblock%}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"> {%block title%}
+    <title>分享赚钱</title>{%endblock%}
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/animate.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/font_ygoh247veso47vi/iconfont.css">
+    <link rel="stylesheet" href="/css/swiper-3.4.2.min.css"> {%block head%}{%endblock%}
+</head>
+
+<body oncontextmenu="return false;" onselectstart="return false">
+    {%block content%} {%endblock%}
+    <div class="padding"></div>
+    <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+        <img src="/images/img1.jpg" width='0' height="0">
+    </div>
+    <footer class="footer">
+        <div class="footer-box">
+            <a href="/share/index">
+                <i class="iconfont {%if path=='/share/index'  %}actives {%endif%}  ">&#xe617;</i>
+                <span class="{%if path=='/share/index'  %}actives {%endif%} ">分享赚钱</span>
+            </a>
+        </div>
+        <div class="footer-box">
+            <a href="/share/person-center">
+                <i class="iconfont {%if path=='/share/person-center'  %}actives {%endif%}">&#xe619;</i>
+                <span class=" {%if path=='/share/person-center'  %}actives {%endif%}">个人中心</span>
+            </a>
+        </div>
+        <div class="footer-box">
+            <a href="/share/shop-center">
+                <i class="iconfont {%if path=='/share/shop-center'  %}actives {%endif%}">&#xe699;</i>
+                <span class=" {%if path=='/share/shop-center'  %}actives {%endif%}">广告主</span>
+            </a>
+        </div>
+        <div class="footer-box">
+            <a href="/share/recruit-student?userId={{user._id.toString()}}">
+                <i class="iconfont {%if path=='/share/recruit-student'  %}actives {%endif%}">&#xe6ce;</i>
+                <span class=" {%if path=='/share/recruit-student'  %}actives {%endif%}">我要收徒</span>
+            </a>
+        </div>
+    </footer>
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/swiper-3.4.2.jquery.min.js"></script>
+    <script src="/lib/jquery.qrcode.js"></script>
+    <script src="/lib/qrocde.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            autoplay: 3000,
+            speed: 300,
+            pagination: '.swiper-pagination',
+        });
+    </script>
+
+    {%block script%}{%endblock%}
+</body>
+
+</html>

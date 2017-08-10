@@ -1,0 +1,48 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight bgac">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+        </div>
+    </div>
+    <div class="bgc">
+        <ul class="liebiao bgf">
+            <li><b></b><span>累计收徒</span><span class="co1">{% if user.totalStudent  %}{{user.totalStudent}}{%else%} 0{%endif%}/人</span></li>
+            <li><b></b><span>账户余额</span><span class="co1">￥:{{user.totalMoney | money}}</span></li>
+        </ul>
+    </div>
+    <div class="bgc">
+        <ul class="liebiao bgf">
+            <a href="/share/money-log">
+                <li><b class="ba1"></b><span>分享收益</span><i class="iconfont">&#xe621;</i></li>
+            </a>
+            <a href="/share/fans-money">
+                <li><b class="ba1"></b><span>粉丝收益</span><i class="iconfont">&#xe621;</i></li>
+            </a>
+        </ul>
+    </div>
+    <div class="bgc">
+        <ul class="liebiao bgf pa1">
+            <a href="/share/getMoney">
+                <li><b class="ba2"></b><span>我要提现</span><i class="iconfont">&#xe621;</i></li>
+            </a>
+            <a href="/share/get-money-record">
+                <li><b class="ba2"></b><span>提现记录</span><i class="iconfont">&#xe621;</i></li>
+            </a>
+        </ul>
+    </div>
+
+</div>
+{%if user.isFinish | myFault %}
+<a href="/share/full-info">
+    <div class="tishi">
+        温馨提示:完善个人信息后才能提现哟！~
+    </div>
+</a>
+{%endif%} {%endblock%}

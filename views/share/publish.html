@@ -1,0 +1,190 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <form method="POST">
+        <div class="release-box">
+            <label for="">标题:</label>
+            <span>新颖有趣的标题更吸引人的眼球</span>
+            <input type="text" name="title">
+        </div>
+        <div class="release-box">
+            <label for="">文章栏目:</label>
+            <ul class="taskTag-list">
+                {% for taskTag in taskTags%}
+                <li {% if loop.index0==0%} class=" active" {%endif%} _id="{{taskTag._id.toString()}}">{{taskTag.name}}</li>
+                {%endfor%}
+            </ul>
+            <input type="text" name="taskTag" value="{{taskTags[0]._id.toString()}}" hidden style="display:none;">
+        </div>
+
+
+
+        <!--  <div class="release-box">
+            <label for="">区域选择:</label>
+            <ul>
+                <li class="active">武汉</li>
+                <li>黄陂</li>
+                <li>孝感</li>
+                <li>荆州</li>
+                <li>仙桃</li>          
+        </div>
+               </ul> -->
+        <div class="release-box">
+            <label for="">预览图片</label>
+            <input type="file" onchange="previewImage(this.files[0])">
+            <img src="" alt="" id="preview" style="max-width:100%;">
+            <input type="text" name="imageUrl" style="display:none;">
+        </div>
+
+
+        <div class="release-box">
+            <label for="">总出价:</label>
+            <span>具有吸引力的价格能让更多人推广</span>
+            <input min="0" type="number" name="totalMoney" value="2" required="required">
+        </div>
+        <div class="release-box">
+            <label for="">单条出价:</label>
+            <span>具有吸引力的价格能让更多人推广</span>
+            <input type="number" name="shareMoney" value="0.2" required="required">
+        </div>
+        <div class="release-box">
+            <label for="">推广地址:</label>
+            <span>你要推广什么就推广什么，记住是网址</span>
+            <input type="text" name="websiteUrl" required="required">
+        </div>
+        <div class="release-box">
+            <label for="">正文:</label>
+            <textarea name="content"></textarea>
+        </div>
+        <div class="release-box vr">
+            <button onclick="requestPay()" class="cs" type="button">发布</button>
+            <!-- <button type="reset">重置</button> -->
+        </div>
+    </form>
+</div>
+<div class="padding"></div>
+{%endblock%} {%block script%}
+<script>
+    $('.taskTag-list li').click(function() {
+        $('.taskTag-list li').removeClass('active');
+        $(this).addClass('active');
+        $('input[name=taskTag]').val($(this).attr('_id'));
+
+    })
+
+    function requestPay() {
+        $.ajax({
+            url: '/share/payTaskMoney',
+            method: 'post',
+            data: {
+                totalMoney: $('input[name=totalMoney]').val(),
+            },
+            success: function(rtn) {
+                if (rtn.ok) {
+                    payMoney(rtn.data, publishTask)
+                } else {
+                    alert(rtn);
+                }
+            }
+
+        })
+    }
+
+    function publishTask() {
+        document.forms[0].submit();
+    }
+
+    function payMoney(payargs, successCallback) {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', payargs, function(res) {
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+                alert("支付成功");
+                successCallback ? successCallback() : '';
+                // 这里可以跳转到订单完成页面向用户展示
+            } else {
+                alert("支付失败，请重试");
+            }
+        });
+    };
+
+    /**
+     * 
+     */
+    function previewImage(file) {
+        // alert(file.name);
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var base64 = event.target.result;
+            convertImgToBase64(base64, function(data) {
+                try {
+                    $('#preview').attr('src', base64);
+                    $.ajax({
+                        url: "/api/uploadBase64",
+                        method: 'POST',
+                        data: {
+                            base64: data
+                        },
+                        success: function(rtn) {
+                            if (rtn.ok) {
+                                alert(rtn.data);
+                                $('input[name=imageUrl]').val(rtn.data);
+                            } else {
+                                alert(rtn.data)
+                            }
+
+                        }
+                    })
+                } catch (e) {
+                    if (e) alert(e);
+
+                }
+            })
+
+        }
+        reader.readAsDataURL(file);
+
+    }
+
+    function convertImgToBase64(url, callback, outputFormat) {
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        var img = new Image;
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+            var width = img.width;
+            var height = img.height;
+            let compress = 1;
+            // 按比例压缩4倍
+            console.log(width * height);
+            if (width * height > 40000) {
+                var rate = Math.ceil(width * height / 40000);
+
+
+            }
+            // var rate = (width < height ? width / height : height / width) / 4;
+            compress = 1 / rate;
+            // var ratio;
+            // if ((ratio = width * height / 40000) > 1) {
+            // ratio = Math.sqrt(ratio);
+            // width /= ratio;
+            // height /= ratio;
+            // } else {
+            // ratio = 1;
+            // }
+
+            canvas.width = width * compress;
+            canvas.height = height * compress;
+            ctx.drawImage(img, 0, 0, width, height, 0, 0, width * compress, height * compress);
+            // ctx.drawImage(img, 0, 0, width, height, 0, 0, width * ratio, height * ratio);
+
+            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+            callback.call(this, dataURL);
+            canvas = null;
+        };
+        img.src = url;
+    }
+</script>
+
+
+
+{%endblock%}

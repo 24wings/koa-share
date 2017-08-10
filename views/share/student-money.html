@@ -1,0 +1,47 @@
+{%extends './layout/base.html'%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="images/icon.jpg" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+        </div>
+    </div>
+    <div class="bill">
+        <div class="bill-box">
+            <i class="iconfont">&#xe608;</i>
+            <p>今日收益</p>
+            <span>￥{{user.todayMiney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65b;</i>
+            <p>账户余额</p>
+            <span>￥{{user.totalMoney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe620;</i>
+            <p>今日收徒</p>
+            <span>{{user.todayStudent}}人</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65d;</i>
+            <p>累计收徒</p>
+            <span>{{user.totalStudent}}人</span>
+        </div>
+    </div>
+    <div class="text">
+        <h3>1丶如何邀请徒弟</h3>
+        <p>把你的"马上收徒赚钱"链接分享出去，有用户完成注册，并分享一篇文章后，即成为你的徒弟。</p>
+    </div>
+    <div class="text">
+        <h3>1丶怎么招收徒弟</h3>
+        <p>在赚钱/兼职/学生等QQ群社区论坛贴吧中发送您的徒弟邀请链接,二三线城市的初高中，技校QQ群百度贴吧收徒效果非常好。自己建立QQ群拉徒弟加入，分享赚钱技巧，徒弟赚的越多你提成越多，现在我们一起赚钱吧~</p>
+    </div>
+    <div class="ma">现在邀请</div>
+    <div class="padding"></div>
+</div>
+{%endblock%}

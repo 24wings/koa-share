@@ -1,0 +1,96 @@
+{%extends './layout/base.html'%} {%block content%}
+
+
+<nav class="nav">
+    <a href="/share/index" {%if queryTaskTag | myFault %} class="active" {%endif%}>推荐</a> {% for tag in taskTags%}
+    <a href="/share/index?taskTag={{tag._id.toString()}}" {%if queryTaskTag==tag._id.toString() %} class="active" {%endif%}>{{tag.name}}</a> {%endfor%}
+
+</nav>
+
+</nav>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        {%for banner in banners%}
+        <div class="swiper-slide">
+            <a href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{banner.task._id.toString()}}">
+                <img src="{% if banner.bannerImg %}{{banner.bannerImg }}{%else%}{{banner.task.imageUrl}}{%endif%}" alt=""></a>
+        </div>
+        {%endfor%}
+
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+<div class="animated fadeInRight">
+    <div class="center">
+        {%for task in tasks%}
+        <a class="center-box" href="/share/taskDetail?shareUserId={{user._id.toString()}}&taskId={{task._id.toString()}}">
+            <div class="center-box-cr">
+                <img src="{%if task.imageUrl%}{{task.imageUrl}} {%else%} /images/bg.jpg{%endif%}" alt="">
+                <p>{{task.title}}</p>
+                <span class="time">{{task.createDt | time}}</span>
+                <span class="cost"><i class="iconfont">&#xe60e;</i>￥{{task.shareMoney | money}}元</span>
+                <span class="click"><i class="iconfont">&#xe662;</i>{{task.clickNum}}</span>
+            </div>
+        </a>
+
+        {%endfor%}
+
+    </div>
+</div>
+{%endblock%} {%block script%}
+<script>
+    var userId = '{{user._id.toString()}}';
+    var taskTag = '{{queryTaskTag}}';
+    // alert(taskTag);
+    var timmer;
+    page = 0;
+
+    window.onscroll = function() {
+        //=$(window).height()+$(window).scrollTop();
+        let fullHeight = document.body.clientHeight;
+        let marginBottom = fullHeight - $(window).height() - $(window).scrollTop();
+        if (marginBottom < 200) {
+            if (timmer) {
+                clearTimeout(timmer);
+            }
+
+            timmer = setTimeout(loadData, 1500);
+        }
+
+    }
+
+    function loadData() {
+        page++;
+        $.ajax({
+            url: '/share/task-page?page=' + page + '&taskTag=' + taskTag,
+            method: 'get',
+            success: function(rtn) {
+                if (rtn) {
+                    let tasks = rtn.data;
+                    try {
+                        for (var i = 0; i < tasks.length; i++) {
+                            let $item = $('<a class="center-box" href="/share/taskDetail?shareUserId=' + userId + '&taskId=' + tasks[i]._id + '">' +
+                                '<div class="center-box-cr">' +
+                                '<img src="' + tasks[i].imageUrl + '" alt="">' +
+                                '<p>' + tasks[i].title + '</p>' +
+                                '<span class="time">' + tasks[i].createDt + '</span>' +
+                                '<span class="cost"><i class="iconfont">&#xe60e;</i>￥' + tasks[i].shareMoney + '元</span>' +
+                                '<span class="click"><i class="iconfont">&#xe662;</i>' + tasks[i].clickNum + '</span>' +
+                                '</div>' +
+                                '</a>').appendTo('.center');
+                        }
+                    } catch (e) {
+                        if (e) alert(e);
+                    }
+
+                } else {
+                    alert(rtn.data);
+                }
+            }
+        })
+
+    }
+</script>
+
+
+{%endblock%}

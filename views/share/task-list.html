@@ -1,0 +1,23 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="tixianye">
+        <div class="tixianye-box">
+            <span>已投放广告:</span>
+            <p>{{tasks.length}}条</p>
+        </div>
+    </div>
+    <table class="biao1">
+        <tr>
+            <th>广告列表</th>
+            <th>状态</th>
+        </tr>
+        {% for task in tasks%}
+        <tr>
+            <td>{{task.title}}</td>
+            <td>{%if task.active%} 未上架 {%else%} 已上架 {%endif%}</td>
+        </tr>
+        {%endfor%}
+
+    </table>
+</div>
+{%endblock%}

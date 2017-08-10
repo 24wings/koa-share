@@ -1,0 +1,37 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">今日文章转发收益:<span>{{user.todayMoney|money}}</span></p>
+            <div class="id">账户余额:<span>{{user.totalMoney|money}}</span></div>
+        </div>
+    </div>
+    <div class="tixianye">
+        <div class="tixianye-box">
+            <p>24小时内收益详情</p>
+        </div>
+    </div>
+    <table class="biao1">
+        <tr>
+            <th>流水号</th>
+            <th>标题</th>
+            <th>收益</th>
+        </tr>
+        {%for taskRecord in taskRecords%}
+        <tr>
+            <td>{{taskRecord.createDt | time}}</td>
+            <td>{{taskRecord.task.title}}</td>
+            <td>￥ {%for order in taskRecord.shareDetail %} {%if order.user == user._id.toString()%} {{order.money | money}} {%endif%} {%endfor%}
+            </td>
+        </tr>
+        {%endfor%}
+
+
+    </table>
+</div>
+{%endblock%}

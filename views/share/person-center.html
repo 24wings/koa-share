@@ -1,0 +1,97 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+            <a href="/share/full-info"><i class="iconfont">&#xe618;</i></a>
+        </div>
+    </div>
+    <div class="bill">
+        <div class="bill-box">
+            <i class="iconfont">&#xe608;</i>
+            <p>今日收益</p>
+            <span>￥{{user.todayMoney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65b;</i>
+            <p>账户余额</p>
+            <span>￥{{user.totalMoney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe620;</i>
+            <p>今日收徒</p>
+            <span>{{user.todayStudent}}人</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65d;</i>
+            <p>累计收徒</p>
+            <span>{{user.totalStudent}}人</span>
+        </div>
+    </div>
+    <div class="operation">
+        <div class="operation-box">
+            <a href="/share/index">
+                <p class="p1"><i class="iconfont">&#xe6d9;</i></p>
+                <span>分享赚钱</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/myMoney">
+                <p class="p2"><i class="iconfont">&#xe8d3;</i></p>
+                <span>我的钱包</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/recruit-student">
+                <p class="p3"><i class="iconfont">&#xe61a;</i></p>
+                <span>收徒赚钱</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/get-money-record">
+                <p class="p4"><i class="iconfont">&#xe601;</i></p>
+                <span>提现记录</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/fans-money">
+                <p class="p5"><i class="iconfont">&#xe65a;</i></p>
+                <span>粉丝收益</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/money-log">
+                <p class="p6"><i class="iconfont">&#xe690;</i></p>
+                <span>收益日志</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a href="/share/guide">
+                <p class="p7"><i class="iconfont">&#xe63d;</i></p>
+                <span>用户指南</span>
+            </a>
+        </div>
+        <div class="operation-box">
+            <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=d7fd2d3aa355288e9b3dcf4efd3988c338f32c2c8993e065ebae8e1f033ad581">
+                <!-- <img border="0" src="//pub.idqqimg.com/wpa/images/group.png " alt="狠享赚官方第165群" title="狠享赚官方第165群"> -->
+                <p class="p8"><i class="iconfont">&#xe616;</i></p>
+                <span>一键加群</span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% if user.isFinish | myFault %}
+<a href="/share/full-info">
+    <div class="tishi">
+        温馨提示:完善个人信息后才能提现哟！~
+    </div>
+</a>
+{%endif%} {%endblock%}

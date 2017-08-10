@@ -1,0 +1,58 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+        </div>
+    </div>
+    <div class="bill">
+        <div class="bill-box">
+            <i class="iconfont">&#xe608;</i>
+            <p>今日收益</p>
+            <span>￥{{user.todayMoney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65b;</i>
+            <p>账户余额</p>
+            <span>￥{{user.totalMoney | money}}</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe620;</i>
+            <p>今日收徒</p>
+            <span>{{user.todayStudent}}人</span>
+        </div>
+        <div class="bill-box">
+            <i class="iconfont">&#xe65d;</i>
+            <p>累计收徒</p>
+            <span>{{user.tatalStudent}}人</span>
+        </div>
+    </div>
+    <div class="form">
+        <form method="POST">
+            <div class="form-box">
+                <i class="iconfont">&#xe61c;</i>
+                <input type="text" placeholder="请输入您的手机号" name="phone">
+            </div>
+            <div class="form-box">
+                <i class="iconfont f2">&#xe758;</i>
+                <input type="text" placeholder="请输入您的微信号" name="weixinId">
+            </div>
+            <div class="form-box">
+                <i class="iconfont f1">&#xe603;</i>
+                <input type="text" placeholder="请输入您的QQ号" name="qq">
+            </div>
+            <div class="form-box">
+                <button>确认</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<div class="padding"></div>
+{%endblock%}

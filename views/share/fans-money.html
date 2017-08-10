@@ -1,0 +1,57 @@
+{%extends './layout/base.html'%} {%block content%}
+<div class="animated fadeInRight">
+    <div class="icon">
+        <div class="icon-box">
+            <div class="iconImg">
+                <div class="iconImgs">
+                    <img src="{{user.headimgurl}}" alt="">
+                </div>
+            </div>
+            <p class="name">{{user.nickname}}</p>
+            <div class="id">编号:<span>{{user._id.toString().substring(0,6)}}</span></div>
+        </div>
+    </div>
+    <div class="tixianye">
+        <div class="tixianye-box">
+            <p>24小时内收益详情</p>
+        </div>
+    </div>
+    <table class="biao1">
+        <tr>
+            <th>级别</th>
+            <th>数量</th>
+            <th>收益</th>
+            <th>比例</th>
+        </tr>
+        <tr>
+            <td>我的</td>
+            <td>1</td>
+            <td>￥{{allMyMoney | money}}</td>
+            <td>%{{allMoney / allMoney *100}}</td>
+        </tr>
+        <tr>
+            <td>一级</td>
+            <td>{{level1.num}}</td>
+            <td>￥{{level1.money | money}}</td>
+            <td>% {{level1.money/allMoney *100}}</td>
+
+        </tr>
+        <tr>
+            <td>二级</td>
+            <td>{{level2.num}}</td>
+            <td>￥{{level2.money | money}}</td>
+            <td> %{{level2.money/allMoney *100 }}</td>
+
+        </tr>
+        <tr>
+            <td>三级</td>
+            <td>{{level3.num}}</td>
+            <td>￥{{level3.money | money}}</td>
+            <td>% {{level3.money/allMoney }}</td>
+
+        </tr>
+
+
+    </table>
+</div>
+{%endblock%}

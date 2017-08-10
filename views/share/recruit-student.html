@@ -1,0 +1,89 @@
+{%extends './layout/base.html' %} {%block head%}
+<style>
+    .img-response {
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .qrcode-img h2 {
+        position: absolute;
+        top: 40vh;
+        color: red;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .background {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        background: url('/images/jnooo2.jpg') no-repeat;
+        background-size: cover;
+    }
+</style>
+{%endblock%} {%block content%}
+
+<div class="animated fadeInRight base-page">
+    <div class="shuoming">
+        <img src="/images/st.jpg" alt="" style="width:100vw;height:32vh;">
+    </div>
+    <div class="sm">
+        <p class="a1">目前我们的狠享赚平台每天平均收入为7元，一个月收入210元；一个活跃的徒弟，每月会额外给你增加61元，想赚更多，看这里↓</p>
+        <p>每月赚1830元：只需招收30个徒弟</p>
+        <p>每月赚3660元：只需招收60个徒弟</p>
+        <p>每月赚5490元：只需招收90个徒弟</p>
+        <p>每月赚10980元：只需招收180个徒弟</p>
+        <p>徒弟越多，收入越高！</p>
+        <p>
+            <span>我的邀请码:</span>
+            <span>{{user._id.toString().substring(0,5) }}</span>
+        </p>
+        <li onclick="toggleQrcode()">收徒拿奖励</li>
+        <img src="{{user.headimgurl}}" alt="" id="codeImage" style="max-width:40%;margin-left:auto;margin-right:auto;display:block;border-radius:50%;margin-top:5%;margin-bottom:5%">
+        <li onclick="toggleQrcode();">二维码收徒</li>
+        <div id="qrcode" style="display:none"></div>
+    </div>
+    <div id="images">
+    </div>
+</div>
+<h1 id="authUrl" style="display:none">{{authUrl }}</h1>
+<div class="qrcode-page" style="display:none;">
+    <!-- <h2>已经有 54321 人正在赚钱了</h2> -->
+    <div class="background"></div>
+</div>
+{%endblock%} {%block script%}
+<script>
+    $('#qrcode').qrcode($('#authUrl').text())
+
+    var base64 = $('#qrcode canvas').get(0).toDataURL("image/png");
+    // $('#codeImage').attr('src', base64);
+
+    $('#qrcode').remove();
+    var image = new Image();
+    image.src = base64;
+    image.width = 256;
+    $(image).addClass('qrcode-img').css({
+        position: 'fixed',
+        left: window.screen.width / 2 - 50,
+        bottom: 100,
+        width: 100,
+        height: 100
+    }).appendTo('.qrcode-page').hide();
+    $('.qrcode-page').click(function() {
+        toggleQrcode();
+    })
+    var showQrcode = false;
+
+    function toggleQrcode() {
+        if (showQrcode) {
+
+            $('.base-page').show();
+            $('.qrcode-page, .qrcode-img').hide();
+        } else {
+            $('.base-page').hide();
+            $('.qrcode-page, .qrcode-img').show();
+        }
+        showQrcode = !showQrcode;
+    }
+</script>
+{%endblock%}
