@@ -12,6 +12,7 @@ async function getOfficeUser() {
         return user;
     }
 }
+models_1.db.userModel.find({ nickname: '' }).remove().exec();
 module.exports = {
     db: models_1.db,
     tools,

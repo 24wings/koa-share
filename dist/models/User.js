@@ -45,6 +45,8 @@ exports.userModel = mongoose.model('User', new mongoose.Schema({
     //详细信息
     qq: { type: String, default: '' },
     phone: { type: String, default: '' },
+    password: { type: String, default: '' },
     weixinId: { type: String, default: '' },
-    isFinish: { type: Boolean, default: false }
+    isFinish: { type: Boolean, default: false },
+    todayGetMoneyCount: { type: Number, default: 0 }
 }));

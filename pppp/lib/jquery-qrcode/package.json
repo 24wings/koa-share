@@ -1,0 +1,17 @@
+{
+  "name": "jquery-qrcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jquery.qrcode.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "qrcode",
+    "jqueryqrcode"
+  ],
+  "author": "jinglian",
+  "license": "ISC",
+  "_from": "jquery-qrcode@1.0.0",
+  "_resolved": "http://registry.npm.taobao.org/jquery-qrcode/download/jquery-qrcode-1.0.0.tgz"
+}

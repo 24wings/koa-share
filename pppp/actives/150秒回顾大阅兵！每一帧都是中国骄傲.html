@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>狠享赚</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <style>
+     video{
+        display:block;
+            position: sticky;
+
+        z-index:999999;
+    }
+     
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="bannerImg">
+            <a href="#"><img src="images/1-1.jpg" alt="广告页" class="img-responsive"></a>
+        </div>
+        <div class="content">
+            <p class="companyName">
+                武汉铭禄科技有限公司专注于微信广告信息服务！
+            </p>
+            <video   id="videoID" webkit-playsinline="true"  x-webkit-airplay="true"  
+            playsinline="true" x5-video-player-type="h5" x5-video-player-fullscreen="true" 
+            width="100%" height="100%" preload="auto"   poster="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1503287391&di=6e8ef85d57b9c9149bf2d0374ccf6fad&src=http://img.zcool.cn/community/01db265544f3e30000019ae973818e.jpg"  src="http://ogvvxp5ar.bkt.clouddn.com/150%E7%A7%92%E5%9B%9E%E9%A1%BE%E5%A4%A7%E9%98%85%E5%85%B5%EF%BC%81%E6%AF%8F%E4%B8%80%E5%B8%A7%E9%83%BD%E6%98%AF%E4%B8%AD%E5%9B%BD%E9%AA%84%E5%82%B2_%E9%AB%98%E6%B8%85.mp4"
+                >
+                您的浏览器不支持 HTML5 video 标签。
+            </video>
+
+            <hr class="inline"></hr>
+            <a href="javascript:;">
+                <img src="images/2.jpg" alt="banner1" class="img-responsive">
+            </a>
+            <a href="javascript:;">
+                <img src="images/1.jpg" alt="banner2" class="img-responsive">
+            </a>
+            <a href="javascript:;">
+                <img src="images/3.jpg" alt="banner3" class="img-responsive">
+            </a>
+            <h4>
+                <span>播放10000+</span>
+                <img src="images/good.png" alt="点赞" id="likes" onclick="postThumbsUp()">
+                <span id="number">0</span>
+            </h4>
+        </div>
+        <div class="footer">
+            <a href="#">
+                         Copyright © 2014-2017 武汉铭禄科技有限公司 版权所有
+            </a>
+        </div>
+    </div>
+    <div id="cover">
+        <img src="images/share.png" alt="遮罩层" class="img-responsive">
+    </div>
+    <script>
+        var stopTime = 75;
+    </script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/js.js"></script>
+    <script src="./video.js"></script>
+    <script>
+        function autoPlayAudio1() {
+            wx.config({
+                // 配置信息, 即使不正确也能使用 wx.ready
+                debug: false,
+                appId: '',
+                timestamp: 1,
+                nonceStr: '',
+                signature: '',
+                jsApiList: []
+            });
+            wx.ready(function() {
+                document.getElementById('media').play();
+            });
+        }
+        autoPlayAudio1();
+    </script>
+</body>
+
+</html>

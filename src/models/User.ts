@@ -21,6 +21,7 @@ export interface IUser extends mongoose.Document {
      * 历史盈利
      */
     historyMoney: number;
+    todayGetMoneyCount:number;
 }
 
 /*
@@ -69,6 +70,8 @@ export var userModel = mongoose.model<IUser>('User', new mongoose.Schema({
     //详细信息
     qq: { type: String, default: '' },
     phone: { type: String, default: '' },
+    password:{type:String,default:''},
     weixinId: { type: String, default: '' },
-    isFinish: { type: Boolean, default: false }
+    isFinish: { type: Boolean, default: false },
+    todayGetMoneyCount:{type:Number,default:0}
 }));

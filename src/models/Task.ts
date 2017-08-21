@@ -14,11 +14,15 @@ var taskSchema = new mongoose.Schema({
     // 浏览数量
     pv: { type: Number, default: 0 },
     clickNum: { type: Number, default: 0 },
+    bannerImg: { type: String, default: '' },
+    /**投放时间 */
+    startDt: { type: Date, default: Date.now },
+
     /**
      * 已经浏览过的ip
      */
     ips: { type: [String], default: [] },
-    users: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
+    users: { type: [mongoose.Schema.Types.ObjectId], ref: 'Advert', default: [] },
     active: { type: Boolean, default: false },
     msg: { type: String, default: '正在审核中' }
 });

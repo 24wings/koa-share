@@ -24,13 +24,7 @@ export interface ITaskRecord extends mongoose.Document {
 
 }
 
-export interface TaskRecord {
-    task: ITaskRecord | string;
-    totalFee: number;
-    shareDetail: { money: number, user: IUser | string }[];
-    createDt?: Date;
 
-}
 
 
 export var taskRecordModel = mongoose.model<ITaskRecord>('TaskRecord', taskRecordSchema);

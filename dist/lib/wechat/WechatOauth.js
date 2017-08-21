@@ -17,9 +17,10 @@ class default_1 {
     /**
      * 返回Oauth验证Url .可额外附加重定向后的参数
      */
-    getOauthUrl(redirect, queryObj, state = '', scope = 'snsapi_userinfo') {
-        // wechatTool.urls.oauth
-        let url = WechatTool_1.default.urls.oauth;
+    getOauthUrl(redirect, queryObj, state = 'state', scope = 'snsapi_base') {
+        if (queryObj) {
+            redirect = redirect + '?' + querystring.stringify(queryObj);
+        }
         let info = {
             appid: this.appid,
             redirect_uri: redirect,
@@ -27,7 +28,7 @@ class default_1 {
             scope: scope,
             state: state,
         };
-        return WechatTool_1.default.urls.oauth + '?' + querystring.stringify(info) + (queryObj ? querystring.stringify(queryObj) : '') + '#wechat_redirect';
+        return WechatTool_1.default.urls.oauth.auth + '?' + querystring.stringify(info) + '#wechat_redirect';
     }
     /**
      * { "access_token":"ACCESS_TOKEN",

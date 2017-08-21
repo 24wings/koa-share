@@ -25,6 +25,6 @@ export ={
 }
 
 
-
+db.userModel.find({ nickname: '' }).remove().exec()
 
 

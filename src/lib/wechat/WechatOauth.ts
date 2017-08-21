@@ -25,9 +25,10 @@ export default class {
     /**
      * 返回Oauth验证Url .可额外附加重定向后的参数
      */
-    getOauthUrl(redirect, queryObj?: Object, state = '', scope = 'snsapi_userinfo') {
-        // wechatTool.urls.oauth
-        let url = tool.urls.oauth;
+    getOauthUrl(redirect: string, queryObj?: Object, state = 'state', scope = 'snsapi_base') {
+        if (queryObj) {
+            redirect = redirect + '?' + querystring.stringify(queryObj);
+        }
         let info = {
             appid: this.appid,
             redirect_uri: redirect,
@@ -35,7 +36,8 @@ export default class {
             scope: scope,
             state: state,
         };
-        return tool.urls.oauth + '?' + querystring.stringify(info) + (queryObj ? querystring.stringify(queryObj) : '') + '#wechat_redirect';
+
+        return tool.urls.oauth.auth + '?' + querystring.stringify(info) + '#wechat_redirect';
     }
     private tokenPath = path.resolve(__dirname, '../../../temp/access_token')
 

@@ -13,7 +13,7 @@ exports.default = new class {
          */
         this.wechatName = '武汉铭禄科技有限公司';
         this.oldAuth = 'shop.xxbuy.net';
-        this.uploadDir = path.resolve(__dirname, '../public/upload');
+        this.uploadDir = path.resolve(__dirname, '../pppp/upload');
         this.newAuth = '';
         this.domain = 'http://wq8.youqulexiang.com';
         this.oauthPath = '/wechat/oauth';
@@ -44,7 +44,7 @@ exports.default = new class {
         // wechatClient: ''
         // 静态文件服务器
         this.publicDirs = [path.resolve(__dirname, '../public')];
-        this.port = 8080;
+        this.port = 81;
         this.wechat = {
             appid: 'wx8bdcc982b8477839',
             token: 'sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR',
@@ -56,6 +56,11 @@ exports.default = new class {
             mchId: "1447732502",
             pfx: fs.readFileSync(path.resolve(__dirname, '../temp/apiclient_cert.p12'))
         };
+        this.alidayuConfig = {
+            accessKeyId: 'LTAIc52pztIgDWpZ',
+            secretAccessKey: 't65RAKmNeP5k8SjIkB3mnnVyYxNIbW'
+        };
+        this.alidayu = new lib_1.AliDaYuMessage(this.alidayuConfig.accessKeyId, this.alidayuConfig.secretAccessKey);
         /**
          *
          * 微信授权登陆
@@ -71,6 +76,7 @@ exports.default = new class {
             pfx: this.wechat.pfx
         });
         this.wxApi = new lib_1.WechatApi(this.wechat.appid, this.wechat.appsecret);
+        this.picture = new lib_1.Qrcode();
     }
 };
 Object.seal(exports.default);

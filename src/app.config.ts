@@ -1,6 +1,6 @@
 import path = require('path');
 import fs = require('fs');
-import { WechatOauth, WechatPay, WechatApi } from './lib';
+import { WechatOauth, WechatPay, WechatApi, AliDaYuMessage, Qrcode } from './lib';
 
 
 
@@ -17,7 +17,7 @@ export default new class {
      */
     wechatName = '武汉铭禄科技有限公司';
     oldAuth = 'shop.xxbuy.net';
-    uploadDir = path.resolve(__dirname, '../public/upload');
+    uploadDir = path.resolve(__dirname, '../pppp/upload');
     newAuth = '';
     domain = 'http://wq8.youqulexiang.com';
     oauthPath = '/wechat/oauth';
@@ -49,8 +49,8 @@ export default new class {
     // wechatClient: ''
     // 静态文件服务器
     publicDirs = [path.resolve(__dirname, '../public')]
-    port = 8080;
-    private wechat = {
+    port = 81;
+    wechat = {
         appid: 'wx8bdcc982b8477839',
         token: 'sbnEzLbl77Gqnovb7Gqljj7TqYbRPprR',
         appsecret: 'ffe69aaff2487a7f1557f4e2e33952e6',
@@ -60,7 +60,13 @@ export default new class {
         notifyUrl: "http://wq8.youqulexiang.com/payment/",
         mchId: "1447732502",
         pfx: fs.readFileSync(path.resolve(__dirname, '../temp/apiclient_cert.p12'))
+    };
+    alidayuConfig = {
+        accessKeyId: 'LTAIc52pztIgDWpZ',
+        secretAccessKey: 't65RAKmNeP5k8SjIkB3mnnVyYxNIbW'
     }
+
+    alidayu = new AliDaYuMessage(this.alidayuConfig.accessKeyId, this.alidayuConfig.secretAccessKey);
 
 
 
@@ -79,6 +85,7 @@ export default new class {
         pfx: this.wechat.pfx
     });
     public wxApi = new WechatApi(this.wechat.appid, this.wechat.appsecret);
+    public picture = new Qrcode();
 
 
 }

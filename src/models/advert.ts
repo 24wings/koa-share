@@ -3,13 +3,17 @@
 import mongoose = require('mongoose');
 
 let advertSchema = new mongoose.Schema({
-    phone: Number,
+    phone: String,
     password: String,
-
+    createDt: { type: Date, default: Date.now },
+    money: { type: Number, default: 0 },
+    //历史产生的金额
+    historyMoney: { type: Number, default: 0 }
 });
 export interface IAdvert extends mongoose.Document {
-    phone: Number,
-    password: String,
-
+    phone: number;
+    password: string;
+    createDt: Date;
+    money: number;
 }
-export var advertModel = mongoose.model<IAdvert>('advert', advertSchema); 
+export var advertModel = mongoose.model<IAdvert>('Advert', advertSchema); 
