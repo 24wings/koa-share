@@ -426,8 +426,8 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                                 let iiParent = parents[1];
                                 let iiiParent = parents[2];
                                 let iMoney = 0.85 * taskAllMoney;
-                                let iiMoney = 0.05 * taskAllMoney;
-                                let iiiMoney = 0.10 * taskAllMoney;
+                                let iiMoney = 0.10 * taskAllMoney;
+                                let iiiMoney = 0.5 * taskAllMoney;
                                 taskRecord = await this.service.dbDo.returnMoney([
                                     { task: taskId, userId, money: 0 },
                                     { task: taskId, userId: iParent, money: iMoney },
