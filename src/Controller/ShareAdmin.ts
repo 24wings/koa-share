@@ -13,6 +13,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                 case 'delete': return this.restDelete;
                 default: return this.index;
             };
+            case 'taskTaskAndChildren': return this.taskTagAndChildren;
             case 'mainInfo': return this.mainInfo;
             case 'systemLog': return this.systemLog;
             case 'task-delete': return this.taskDelete;
@@ -25,10 +26,87 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'recharge-list': return this.rechargeList;
             case 'relationTree': return this.relationTree;
             case 'userClickRecord': return this.userClickRecord;
+            case 'taskTag': switch (method) {
+                case 'get': return this.getTaskTag;
+                case 'post': return this.addTaskTag;
+            }
+            case 'taskByTaskTag': return this.taskByTaskTag;
+            case 'addBanner': return this.addBanner;
+            case 'banners': return this.banners;
+            case 'toggleBannerActive': return this.toggleBannerActive;
+            case 'removeBanner': return this.removeBanner;
+            case 'users': return this.users;
+            case 'login': return this.login;
             default: return this.index;
-
-
         }
+    }
+    async login() {
+        let { username, password } = this.ctx.request.body;
+        if (username == 'moon' && password == 'moon') {
+            this.ctx.body = { ok: true, data: { username, password } };
+        } else {
+            this.ctx.body = { ok: false, data: '管理员密码错误' };
+        }
+
+    }
+
+    async users() {
+        let users = await this.db.userModel.find().exec();
+        this.ctx.body = { ok: true, data: users };
+    }
+    async removeBanner() {
+        let del = await this.db.bannerModel.findByIdAndRemove(this.ctx.query._id).exec()
+        this.ctx.body = { ok: true, data: del };
+    }
+    /**
+     * POST 请求
+     */
+    async toggleBannerActive() {
+        let { _id, active } = this.ctx.request.body;
+        let action = await this.db.bannerModel.findByIdAndUpdate(_id, { active: !!active }).exec()
+        this.ctx.body = { ok: true, data: action };
+    }
+    async banners() {
+        let data = await this.db.bannerModel.find().populate('task').exec();
+        this.ctx.body = { ok: true, data };
+    }
+    async addBanner() {
+        let { taskId } = this.ctx.query;
+        let newBanner = await new this.db.bannerModel({ task: taskId }).save();
+        this.ctx.body = { ok: true, data: newBanner };
+
+    }
+
+    async taskByTaskTag() {
+        let { taskTag } = this.ctx.query;
+        let tasks = await this.db.taskModel.find({ taskTag }).exec();
+        this.ctx.body = { ok: true, data: tasks };
+
+    }
+    async taskTagAndChildren() {
+        var taskTags = await this.db.taskTagModel.find().sort({ sort: -1 }).exec();
+        var taskNums = [];
+        for (let taskTag of taskTags) {
+            taskTag = taskTag._id.toString();
+            let taskNum = await this.db.taskModel.find({ taskTag }).count().exec();
+            taskNums.push(taskNum);
+        }
+        this.ctx.body = { ok: true, data: { taskTags, taskNums } };
+    }
+    async getTaskTag() {
+        let { _id } = this.ctx.query;
+        if (_id) {
+            let taskTag = await this.db.taskTagModel.findById(_id).exec();
+            this.ctx.body = { ok: true, data: taskTag }
+        } else {
+            let taskTags = await this.db.taskTagModel.find().sort({ sort: '-1' }).exec();
+            this.ctx.body = { ok: true, data: taskTags };
+        }
+    }
+    async addTaskTag() {
+        let { name, sort } = this.ctx.request.body;
+        let newTaskTag = await new this.db.taskTagModel({ name, sort }).save();
+        this.ctx.body = { ok: true, data: newTaskTag };
     }
     async userClickRecord() {
         let { userId } = this.ctx.query;
@@ -363,7 +441,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         if (this.db[model]) {
             let table: mongoose.Model<any> = this.db[model];
             let delAction = await table.findByIdAndRemove(_id).exec();
-            this.ctx.request.body = { ok: true, data: delAction };
+            this.ctx.body = { ok: true, data: delAction };
         } else {
             this.ctx.body = { ok: true, data: '数据表不存在' };
         }

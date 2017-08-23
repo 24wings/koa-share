@@ -6,6 +6,7 @@ let advertSchema = new mongoose.Schema({
     phone: String,
     password: String,
     createDt: { type: Date, default: Date.now },
+    // 余额
     money: { type: Number, default: 0 },
     //历史产生的金额
     historyMoney: { type: Number, default: 0 }

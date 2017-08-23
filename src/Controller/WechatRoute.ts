@@ -75,9 +75,9 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             await user.update({ access_token: token.access_token }).exec();
         } else {
             let newUser = await config.wxOauth.getUserByTokenAndOpenId(token.access_token, token.openid);
-            newUser.accessToken = token.access_token;
+            // newUser.accessToken = token.access_token;
             if (parent) {
-                newUser.parent = parent;
+                // newUser.parent = parent;
                 console.log('新用户的师傅是' + parent);
                 await this.db.userModel.findByIdAndUpdate(parent, { $inc: { todayStudent: 1, totalStudent: 1 } }).exec();
             } else {

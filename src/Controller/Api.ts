@@ -11,6 +11,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'uploadBase64': return this.uploadBase64;
             case 'url2Qrcode': return this.url2Qrcode;
             case 'videoBase64': return this.videoBase64;
+
         }
 
     }

@@ -78,9 +78,9 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
         }
         else {
             let newUser = await app_config_1.default.wxOauth.getUserByTokenAndOpenId(token.access_token, token.openid);
-            newUser.accessToken = token.access_token;
+            // newUser.accessToken = token.access_token;
             if (parent) {
-                newUser.parent = parent;
+                // newUser.parent = parent;
                 console.log('新用户的师傅是' + parent);
                 await this.db.userModel.findByIdAndUpdate(parent, { $inc: { todayStudent: 1, totalStudent: 1 } }).exec();
             }

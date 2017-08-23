@@ -43,10 +43,8 @@ exports.userModel = mongoose.model('User', new mongoose.Schema({
     totalStudent: { type: Number, default: 0 },
     visitTasks: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task' },
     //详细信息
-    qq: { type: String, default: '' },
     phone: { type: String, default: '' },
     password: { type: String, default: '' },
-    weixinId: { type: String, default: '' },
     isFinish: { type: Boolean, default: false },
     todayGetMoneyCount: { type: Number, default: 0 }
 }));

@@ -11,6 +11,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     doAction(action: string, method: string, next) {
         switch (action) {
             case 'login': return this.login;
+            case 'info': return this.info;
             case 'authCode': return this.authCode;
             case 'queryCode': return this.queryCode;
             case 'taskGroup': return this.taskGroup;
@@ -26,6 +27,10 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'taskActive': return this.taskActive;
             case 'task': return this.task;
         }
+    }
+    async info() {
+        let advert = await this.db.advertModel.findById(this.ctx.query._id).exec();
+        this.ctx.body = { ok: !!advert, data: advert }
     }
     async task() {
         let task = await this.db.taskModel.findById(this.ctx.query._id).exec();
@@ -122,10 +127,28 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     }
 
     async    publishTask() {
-        let { shareMoney, fee, title, taskTag, websiteUrl, bannerUrl, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
+        let { shareMoney, fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
+
         if (typeof fee == 'string') fee = parseFloat(fee);
-        let newTask = await new this.db.taskModel({ shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerUrl, imageUrl, startDt, publisher }).save();
-        this.ctx.body = { ok: true, data: newTask };
+        fee = Math.abs(fee);
+        if (fee <= 0 || shareMoney <= 0) {
+            this.ctx.body = { ok: false, data: '非法的发布金额' }
+        } else {
+            let advert = await this.db.advertModel.findById(publisher).exec();
+            if (advert) {
+                if (advert.money < fee) {
+                    this.ctx.body = { ok: false, data: '余额不足' };
+                } else {
+
+                    await advert.update({ $inc: { money: -fee } }).exec();
+                    let newTask = await new this.db.taskModel({ shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt, publisher }).save();
+                    this.ctx.body = { ok: true, data: newTask };
+
+                }
+            } else {
+                this.ctx.body = { ok: false, data: '身份认证失败' };
+            }
+        }
     }
 
     async taskList() {
@@ -133,7 +156,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         this.ctx.body = { ok: true, data: taskTags };
     }
     async taskByAdvertId() {
-        let tasks = await this.db.taskModel.find({ publisher: this.ctx.query._id }).exec();
+        let tasks = await this.db.taskModel.find({ publisher: this.ctx.query._id }).populate('taskTag').exec();
         this.ctx.body = { ok: true, data: tasks };
 
     }

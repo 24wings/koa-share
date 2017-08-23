@@ -35,7 +35,6 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                 case 'get': return this.publishPage;
                 case 'post': return this.publishTask;
             }
-            case 'taskDetail': return this.taskDetail;
             case 'payTaskMoney': return this.payTaskMoney;
             case 'student-money': return this.studentMoney;
             case 'myMoney': return this.myMoney;
@@ -81,10 +80,10 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
         page = page ? page : 0;
         let tasks = [];
         if (taskTag) {
-            tasks = await this.db.taskModel.find({ taskTag }).skip(pageSize * page).limit(pageSize).exec();
+            tasks = await this.db.taskModel.find({ active: true, taskTag }).skip(pageSize * page).limit(pageSize).exec();
         }
         else {
-            tasks = await this.db.taskModel.find().sort({ clickNum: '-1' }).skip(pageSize * page).limit(pageSize).exec();
+            tasks = await this.db.taskModel.find({ active: true }).sort({ clickNum: '-1' }).skip(pageSize * page).limit(pageSize).exec();
         }
         this.ctx.body = { ok: true, data: tasks };
     }
@@ -331,15 +330,9 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
      *
      */
     async taskDetail() {
-        let { taskId, parent, shareUserId, userId } = this.ctx.request.body;
-        console.log(parent);
-        let user = await this.db.userModel.findOne({ $or: [{ _id: parent }, { openid: parent }] }).exec();
-        if (!user) {
-            user = await this.db.userModel.findById(parent).exec();
-        }
-        if (!user) {
-            user = await this.db.userModel.findOne({ parent }).exec();
-        }
+        let { taskId, userId } = this.ctx.request.body;
+        let user = await this.db.userModel.findById(userId).exec();
+        console.log('=========================返利接口=======================', user);
         // 如果是
         // 若不是注册的用户 , 则跳转到登陆页面, 并转载parent,taskId, 该用户会自动注册,拜师,然后返回这个任务做任务
         if (!user) {

@@ -11,7 +11,7 @@ var taskSchema = new mongoose.Schema({
     imageUrl: { type: String },
     websiteUrl: String,
     createDt: { type: Date, default: Date.now },
-    publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'Advert' },
     // 浏览数量
     pv: { type: Number, default: 0 },
     clickNum: { type: Number, default: 0 },
@@ -22,7 +22,7 @@ var taskSchema = new mongoose.Schema({
      * 已经浏览过的ip
      */
     ips: { type: [String], default: [] },
-    users: { type: [mongoose.Schema.Types.ObjectId], ref: 'Advert', default: [] },
+    users: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
     active: { type: Boolean, default: false },
     msg: { type: String, default: '正在审核中' }
 });

@@ -17,7 +17,7 @@ class default_1 {
     /**
      * 返回Oauth验证Url .可额外附加重定向后的参数
      */
-    getOauthUrl(redirect, queryObj, state = 'state', scope = 'snsapi_base') {
+    getOauthUrl(redirect, queryObj, state = '', scope = 'snsapi_base') {
         if (queryObj) {
             redirect = redirect + '?' + querystring.stringify(queryObj);
         }
@@ -42,13 +42,21 @@ class default_1 {
     async getAccessToken(code) {
         let result = await WechatTool_1.default.httpsGet(`https://api.weixin.qq.com/sns/oauth2/access_token` + `?code=${code}&appid=${this.appid}&secret=${this.appscrent}&grant_type=authorization_code`);
         let obj = JSON.parse(result);
-        this.saveAccessTokenToFile(obj.openid, obj);
+        await this.saveAccessTokenToFile(obj.openid, obj);
         return obj;
     }
+    // 如果没有获得新用户就掠过请求
     async getUserByTokenAndOpenId(access_token, openid) {
         let userStr = await WechatTool_1.default.httpsGet(`https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN `);
         let user = JSON.parse(userStr);
-        return user;
+        console.log(user);
+        // errcode: 40001,第二次的使code失效
+        if (user.errcode) {
+            return { ok: false, user };
+        }
+        else {
+            return { ok: true, user };
+        }
     }
     getAccessTokenFromFile(openid) {
         return new Promise((resolve, reject) => {

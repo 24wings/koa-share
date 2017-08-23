@@ -14,7 +14,7 @@ const advert_1 = require("./advert");
 const Project_1 = require("./Project");
 const WXPayToOne_1 = require("./WXPayToOne");
 const ThumbsUp_1 = require("./ThumbsUp");
-mongoose.connect('mongodb://moon:moon@47.92.87.28:27017/test');
+mongoose.connect('mongodb://127.0.0.1:27017/test');
 exports.db = {
     userModel: User_1.userModel,
     taskModel: Task_1.taskModel,

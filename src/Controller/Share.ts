@@ -12,6 +12,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     doAction(action: string, method: string, next) {
         switch (action) {
             case 'index': return this.index;
+
             case 'user': return this.user;
             case 'task': return this.task;
             case 'tasks': return this.tasks;
@@ -32,7 +33,6 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                 case 'get': return this.publishPage;
                 case 'post': return this.publishTask;
             }
-            case 'taskDetail': return this.taskDetail;
 
             case 'payTaskMoney': return this.payTaskMoney;
 
@@ -54,13 +54,13 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'thumbsup': switch (method) {
                 case 'get': return this.thumbsUp;
                 case 'post': return this.thumbsUpDo;
-
-
             }
+
 
             default: return this.index;
         }
     }
+
     async taskTagList() {
         let data = await this.db.taskTagModel.find().exec();
         this.ctx.body = { ok: true, data };
@@ -83,9 +83,9 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         page = page ? page : 0;
         let tasks = [];
         if (taskTag) {
-            tasks = await this.db.taskModel.find({ taskTag }).skip(pageSize * page).limit(pageSize).exec();
+            tasks = await this.db.taskModel.find({ active: true, taskTag }).skip(pageSize * page).limit(pageSize).exec();
         } else {
-            tasks = await this.db.taskModel.find().sort({ clickNum: '-1' }).skip(pageSize * page).limit(pageSize).exec();
+            tasks = await this.db.taskModel.find({ active: true }).sort({ clickNum: '-1' }).skip(pageSize * page).limit(pageSize).exec();
         }
         this.ctx.body = { ok: true, data: tasks };
     }
@@ -279,7 +279,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
      */
     async fixFullInfo() {
         let { userId, phone, password } = this.ctx.request.body
-        let updateAction = await this.service.db.userModel.findByIdAndUpdate(userId, {  phone, password, isFinish: true }).exec();
+        let updateAction = await this.service.db.userModel.findByIdAndUpdate(userId, { phone, password, isFinish: true }).exec();
         this.ctx.body = { ok: true, data: updateAction };
     }
 
@@ -380,15 +380,11 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
      */
     async  taskDetail() {
 
-        let { taskId, parent, shareUserId, userId } = this.ctx.request.body;
-        console.log(parent);
-        let user = await this.db.userModel.findOne({ $or: [{ _id: parent }, { openid: parent }] }).exec();
-        if (!user) {
-            user = await this.db.userModel.findById(parent).exec();
-        }
-        if (!user) {
-            user = await this.db.userModel.findOne({ parent }).exec();
-        }
+        let { taskId, userId } = this.ctx.request.body;
+
+        let user = await this.db.userModel.findById(userId).exec();
+        console.log('=========================返利接口=======================', user);
+
 
         // 如果是
 
@@ -553,40 +549,40 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         let { userId, money } = this.ctx.request.body;
 
         let user = await this.db.userModel.findById(userId).exec();
-        if(user.todayGetMoneyCount>=2){
-                this.ctx.body={ok:false,data:'一天只能提现两次哦'};
-        }else{
-            
-        if (typeof money == 'string') money = parseFloat(money);
-        if (user) {
+        if (user.todayGetMoneyCount >= 2) {
+            this.ctx.body = { ok: false, data: '一天只能提现两次哦' };
+        } else {
 
-            if (user.totalMoney >= money) {
-                let result = await config.wxPay.payToOne({
-                    partner_trade_no: new Date().getTime().toString(),
-                    amount: money * 100,
-                    openid: user.openid,
-                    desc: '提现'
-                });
-                if (result.ok) {
-                    let action = await this.db.userModel.findByIdAndUpdate(userId, { $inc: { totalMoney: -money,todayGetMoneyCount:1 } }).exec();
-                    // 请求,钱就会减少
-                    let newRequest = await new this.db.getMoneyRequestModel({ user: userId, money }).save();
-                    this.ctx.body = { ok: true, data: '提款成功' };
+            if (typeof money == 'string') money = parseFloat(money);
+            if (user) {
+
+                if (user.totalMoney >= money) {
+                    let result = await config.wxPay.payToOne({
+                        partner_trade_no: new Date().getTime().toString(),
+                        amount: money * 100,
+                        openid: user.openid,
+                        desc: '提现'
+                    });
+                    if (result.ok) {
+                        let action = await this.db.userModel.findByIdAndUpdate(userId, { $inc: { totalMoney: -money, todayGetMoneyCount: 1 } }).exec();
+                        // 请求,钱就会减少
+                        let newRequest = await new this.db.getMoneyRequestModel({ user: userId, money }).save();
+                        this.ctx.body = { ok: true, data: '提款成功' };
+                    } else {
+                        this.ctx.body = { ok: false, msg: result.data };
+                    }
                 } else {
-                    this.ctx.body = { ok: false, msg: result.data };
-                }
-            } else {
-                this.ctx.body = { ok: false, data: '用户金额不足' };
+                    this.ctx.body = { ok: false, data: '用户金额不足' };
 
+                }
+
+            } else {
+                this.ctx.body = { ok: false, data: '用户不存在' };
             }
 
-        } else {
-            this.ctx.body = { ok: false, data: '用户不存在' };
         }
 
     }
-    
-}
     async　guide() {
         /*
         this.res.render('share/guide', {})

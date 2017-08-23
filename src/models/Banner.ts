@@ -10,7 +10,8 @@ let bannerSchema = new mongoose.Schema({
     // 使用时间段记录
     useTime: { type: [{ startDt: Date, endDt: Date }] },
     createDt: { type: Date, default: Date.now },
-    lastModifyDt: { type: Date, default: Date.now }
+    lastModifyDt: { type: Date, default: Date.now },
+    canUse: { type: Boolean, default: true }
 });
 
 export interface IBanner extends mongoose.Document {
@@ -20,6 +21,7 @@ export interface IBanner extends mongoose.Document {
     active: boolean;
     useTime: { startDt: Date, endDt: Date }[];
     createDt: Date,
+    canuse: Boolean;
     lastModifyDt: Date
 }
 
