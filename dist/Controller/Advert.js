@@ -117,7 +117,7 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
         this.ctx.body = { ok: true, data };
     }
     async publishTask() {
-        let { shareMoney, fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
+        let { shareMoney, fee, title, url, urlName, taskTag, websiteUrl, bannerImg, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
         if (typeof fee == 'string')
             fee = parseFloat(fee);
         fee = Math.abs(fee);
@@ -132,7 +132,7 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                 }
                 else {
                     await advert.update({ $inc: { money: -fee } }).exec();
-                    let newTask = await new this.db.taskModel({ shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt, publisher }).save();
+                    let newTask = await new this.db.taskModel({ url, urlName, shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt, publisher }).save();
                     this.ctx.body = { ok: true, data: newTask };
                 }
             }

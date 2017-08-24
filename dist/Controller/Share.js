@@ -76,14 +76,16 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
     }
     async tasks() {
         let { page, taskTag, pageSize } = this.ctx.request.query;
-        pageSize = pageSize ? pageSize : 10;
+        pageSize = 10;
         page = page ? page : 0;
         let tasks = [];
+        let skipNum = pageSize * page;
+        console.log(skipNum);
         if (taskTag) {
             tasks = await this.db.taskModel.find({ active: true, taskTag }).skip(pageSize * page).limit(pageSize).exec();
         }
         else {
-            tasks = await this.db.taskModel.find({ active: true }).sort({ clickNum: '-1' }).skip(pageSize * page).limit(pageSize).exec();
+            tasks = await this.db.taskModel.find({ active: true }).skip(skipNum).limit(pageSize).exec();
         }
         this.ctx.body = { ok: true, data: tasks };
     }
@@ -213,7 +215,7 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
         let banners = await this.service.db.bannerModel.find({ active: true }).populate('task').exec();
         let taskTags = await this.service.db.taskTagModel.find().exec();
         if (taskTag) {
-            tasks = await this.service.db.taskModel.find({ taskTag }).limit(10).exec();
+            tasks = await this.service.db.taskModel.find({ active: true, taskTag }).limit(10).exec();
         }
         else {
             tasks = await this.service.db.taskModel.find({ active: true }).limit(10).exec();

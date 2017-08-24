@@ -25,7 +25,7 @@ export default class {
     /**
      * 返回Oauth验证Url .可额外附加重定向后的参数
      */
-    getOauthUrl(redirect: string, queryObj?: Object, state = '', scope = 'snsapi_base') {
+    getOauthUrl(redirect: string, queryObj?: Object, state = '', scope = 'snsapi_userinfo') {
         if (queryObj) {
             redirect = redirect + '?' + querystring.stringify(queryObj);
         }
@@ -55,17 +55,20 @@ export default class {
 
 
     async getAccessToken(code: string): Promise<AccessToken> {
-
+        console.log('code:', code);
 
         let result = await tool.httpsGet(`https://api.weixin.qq.com/sns/oauth2/access_token` + `?code=${code}&appid=${this.appid}&secret=${this.appscrent}&grant_type=authorization_code`);
         let obj: AccessToken = JSON.parse(result);
-        await this.saveAccessTokenToFile(obj.openid, obj);
+        // await this.saveAccessTokenToFile(obj.openid, obj);
         return obj;
     }
 
+
     // 如果没有获得新用户就掠过请求
     async getUserByTokenAndOpenId(access_token: string, openid: string): Promise<{ ok: boolean, user: any }> {
-        let userStr = await tool.httpsGet(`https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN `);
+        let url = `https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN`;
+        console.warn('url:', url);
+        let userStr = await tool.httpsGet(url);
         let user = JSON.parse(userStr);
         console.log(user);
         // errcode: 40001,第二次的使code失效

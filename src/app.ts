@@ -71,6 +71,7 @@ router.get('/wechat/oauth', async (ctx, next) => {
     console.log(`query:`, ctx.query);
     // *获取用户的openid 
     let token = await config.wxOauth.getAccessToken(code);
+    console.log('token:', token);
     let tokenUser = await config.wxOauth.getUserByTokenAndOpenId(token.access_token, token.openid);
     if (tokenUser.ok) {
         let user = await service.db.userModel.findOne({ openid: token.openid }).exec();

@@ -127,7 +127,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     }
 
     async    publishTask() {
-        let { shareMoney, fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
+        let { shareMoney, fee, title, url, urlName, taskTag, websiteUrl, bannerImg, imageUrl, startDt = new Date(), publisher } = this.ctx.request.body;
 
         if (typeof fee == 'string') fee = parseFloat(fee);
         fee = Math.abs(fee);
@@ -141,7 +141,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                 } else {
 
                     await advert.update({ $inc: { money: -fee } }).exec();
-                    let newTask = await new this.db.taskModel({ shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt, publisher }).save();
+                    let newTask = await new this.db.taskModel({ url, urlName, shareMoney, fee, totalMoney: fee, title, taskTag, websiteUrl, bannerImg, imageUrl, startDt, publisher }).save();
                     this.ctx.body = { ok: true, data: newTask };
 
                 }

@@ -18,6 +18,10 @@ var taskSchema = new mongoose.Schema({
     bannerImg: { type: String, default: '' },
     /**投放时间 */
     startDt: { type: Date, default: Date.now },
+    // 任务的推广地址
+    url: { type: String, default: '' },
+    // 公众号地址
+    urlName: { type: String, default: '' },
     /**
      * 已经浏览过的ip
      */

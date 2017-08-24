@@ -17,7 +17,7 @@ class default_1 {
     /**
      * 返回Oauth验证Url .可额外附加重定向后的参数
      */
-    getOauthUrl(redirect, queryObj, state = '', scope = 'snsapi_base') {
+    getOauthUrl(redirect, queryObj, state = '', scope = 'snsapi_userinfo') {
         if (queryObj) {
             redirect = redirect + '?' + querystring.stringify(queryObj);
         }
@@ -40,14 +40,17 @@ class default_1 {
  自动缓存 accessToken
      */
     async getAccessToken(code) {
+        console.log('code:', code);
         let result = await WechatTool_1.default.httpsGet(`https://api.weixin.qq.com/sns/oauth2/access_token` + `?code=${code}&appid=${this.appid}&secret=${this.appscrent}&grant_type=authorization_code`);
         let obj = JSON.parse(result);
-        await this.saveAccessTokenToFile(obj.openid, obj);
+        // await this.saveAccessTokenToFile(obj.openid, obj);
         return obj;
     }
     // 如果没有获得新用户就掠过请求
     async getUserByTokenAndOpenId(access_token, openid) {
-        let userStr = await WechatTool_1.default.httpsGet(`https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN `);
+        let url = `https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN`;
+        console.warn('url:', url);
+        let userStr = await WechatTool_1.default.httpsGet(url);
         let user = JSON.parse(userStr);
         console.log(user);
         // errcode: 40001,第二次的使code失效
