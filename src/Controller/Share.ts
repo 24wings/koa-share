@@ -33,9 +33,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                 case 'get': return this.publishPage;
                 case 'post': return this.publishTask;
             }
-
             case 'payTaskMoney': return this.payTaskMoney;
-
             case 'student-money': return this.studentMoney;
             case 'myMoney': return this.myMoney;
             case 'taskDetail': return this.taskDetail;
@@ -55,10 +53,14 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                 case 'get': return this.thumbsUp;
                 case 'post': return this.thumbsUpDo;
             }
+            case 'records': return this.records;
 
 
             default: return this.index;
         }
+    }
+    async records() {
+        this.ctx.body = await this.db.taskRecordModel.find().limit(20).exec();
     }
 
     async taskTagList() {
@@ -439,14 +441,20 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                             console.log('第一位师傅id:', user.parent);
                             await user.populate('parent').execPopulate();
                             parents.push(user.parent);
-                            if (user.parent.parent) {
+                            if (user.parent) {
                                 console.log('第二级师傅id:', user.parent.parent);
-                                parents.push(user.parent.parent);
                                 await user.parent.populate('parent').execPopulate();
-                                if (user.parent.parent.parent) {
+
+                                if (user.parent.parent) {
+                                    parents.push(user.parent.parent);
+                                }
+
+                                if (user.parent.parent) {
                                     await user.parent.parent.execPopulate();
-                                    console.log('第三为师傅id:', user.parent.parent);
-                                    parents.push(user.parent.parent.parent);
+                                    if (user.parent.parent.parent) {
+                                        console.log('第三为师傅id:', user.parent.parent);
+                                        parents.push(user.parent.parent.parent);
+                                    }
                                 }
                             }
                         }
@@ -492,7 +500,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
                                 let iiiParent = parents[2];
                                 let iMoney = 0.85 * taskAllMoney;
                                 let iiMoney = 0.10 * taskAllMoney;
-                                let iiiMoney = 0.5 * taskAllMoney;
+                                let iiiMoney = 0.05 * taskAllMoney;
                                 taskRecord = await this.service.dbDo.returnMoney([
                                     { task: taskId, userId, money: 0 },
                                     { task: taskId, userId: iParent, money: iMoney },
@@ -551,7 +559,7 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         let { userId, money } = this.ctx.request.body;
 
         let user = await this.db.userModel.findById(userId).exec();
-        if (user.todayGetMoneyCount >= 2) {
+        if (user.todayGetMoneyCount >= 20) {
             this.ctx.body = { ok: false, data: '一天只能提现两次哦' };
         } else {
 

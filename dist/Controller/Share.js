@@ -55,8 +55,12 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                 case 'get': return this.thumbsUp;
                 case 'post': return this.thumbsUpDo;
             }
+            case 'records': return this.records;
             default: return this.index;
         }
+    }
+    async records() {
+        this.ctx.body = await this.db.taskRecordModel.find().limit(20).exec();
     }
     async taskTagList() {
         let data = await this.db.taskTagModel.find().exec();
@@ -381,14 +385,18 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                             console.log('第一位师傅id:', user.parent);
                             await user.populate('parent').execPopulate();
                             parents.push(user.parent);
-                            if (user.parent.parent) {
+                            if (user.parent) {
                                 console.log('第二级师傅id:', user.parent.parent);
-                                parents.push(user.parent.parent);
                                 await user.parent.populate('parent').execPopulate();
-                                if (user.parent.parent.parent) {
+                                if (user.parent.parent) {
+                                    parents.push(user.parent.parent);
+                                }
+                                if (user.parent.parent) {
                                     await user.parent.parent.execPopulate();
-                                    console.log('第三为师傅id:', user.parent.parent);
-                                    parents.push(user.parent.parent.parent);
+                                    if (user.parent.parent.parent) {
+                                        console.log('第三为师傅id:', user.parent.parent);
+                                        parents.push(user.parent.parent.parent);
+                                    }
                                 }
                             }
                         }
@@ -429,7 +437,7 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
                                 let iiiParent = parents[2];
                                 let iMoney = 0.85 * taskAllMoney;
                                 let iiMoney = 0.10 * taskAllMoney;
-                                let iiiMoney = 0.5 * taskAllMoney;
+                                let iiiMoney = 0.05 * taskAllMoney;
                                 taskRecord = await this.service.dbDo.returnMoney([
                                     { task: taskId, userId, money: 0 },
                                     { task: taskId, userId: iParent, money: iMoney },
@@ -484,7 +492,7 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
     async getMoneyDo() {
         let { userId, money } = this.ctx.request.body;
         let user = await this.db.userModel.findById(userId).exec();
-        if (user.todayGetMoneyCount >= 2) {
+        if (user.todayGetMoneyCount >= 20) {
             this.ctx.body = { ok: false, data: '一天只能提现两次哦' };
         }
         else {

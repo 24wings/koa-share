@@ -10,9 +10,9 @@ var warn = false
 window.onload = function() {
 
     var videoEle = document.getElementsByTagName('video')[0];
-    setTimeout(function(){
+    setTimeout(function() {
         videoEle.play()
-    },3000)
+    }, 3000)
     checkDurationTimmer = setInterval(function() {
         if (stopTime < videoEle.currentTime && !canplay) {
             // alert('can play'+canplay);
@@ -27,6 +27,8 @@ window.onload = function() {
             // pauseVideo();
         }
     }, 500);
+    window.scrollTo(0, 0)
+
 };
 
 function pauseVideo() {
@@ -37,7 +39,7 @@ function pauseVideo() {
 }
 
 function playVideo() {
- 
+
     var videoEle = document.getElementsByTagName('video')[0];
     window.parent.noCover();
     // document.getElementById('cover').style.display = "none";

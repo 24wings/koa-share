@@ -26,7 +26,34 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'fullEmail': return this.fullEmail;
             case 'taskActive': return this.taskActive;
             case 'task': return this.task;
+            case 'forgotPassword': return this.forgotPassword;
+            case 'changePassword': return this.changePassword;
         }
+    }
+
+    async  changePassword() {
+        let { phone, oldPassword, newPassword } = this.ctx.request.body;
+        let advert = await this.db.advertModel.findOne({ phone, password: oldPassword }).exec();
+        if (advert) {
+            let updateAction = await advert.update({ password: newPassword }).exec();
+            this.ctx.body = { ok: true, data: updateAction };
+        } else {
+            this.ctx.body = { ok: false, data: '手机号或密码错误' }
+
+        }
+
+    }
+    async  forgotPassword() {
+        let { code, phone, newPassword } = this.ctx.request.body;
+        let CODES = await config.alidayu.queryCode(phone);
+        let messageCode = CODES[0].Content.substr(CODES[0].Content.length - 6);
+        if (messageCode == code) {
+            let updateAction = await this.db.advertModel.findOne({ phone }).update({ password: newPassword }).exec();
+            this.ctx.body = { ok: true, data: updateAction }
+        } else {
+            this.ctx.body = { ok: false, data: '短信验证码错误' }
+        }
+
     }
     async info() {
         let advert = await this.db.advertModel.findById(this.ctx.query._id).exec();
@@ -189,16 +216,19 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         this.ctx.body = { ok: !!user, data: !!user ? user : '用户名或密码不存在' };
     }
     async register() {
-        let { user: { phone, password }, authCode } = this.ctx.request.body;
+        let { user: { phone, password }, code } = this.ctx.request.body;
         let user = await this.db.advertModel.findOne({ phone }).exec()
         if (user) {
             this.ctx.body = { ok: false, data: '该手机号已经注册' };
         } else {
             let codes = await config.alidayu.queryCode(phone);
-            if (codes[0].TemplateCode == authCode) {
-                this.ctx.body = { ok: false, data: '验证码错误' };
-            } else {
 
+            let messageCode = codes[0].Content.substr(codes[0].Content.length - 6)
+
+            console.log(code, messageCode, code == messageCode);
+            if (code != messageCode) {
+                this.ctx.body = { ok: false, data: '短信验证码错误' };
+            } else {
                 let newUser = await new this.db.advertModel({ phone, password }).save()
                 this.ctx.body = { ok: true, data: newUser };
 

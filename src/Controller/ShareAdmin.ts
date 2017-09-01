@@ -37,8 +37,15 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             case 'removeBanner': return this.removeBanner;
             case 'users': return this.users;
             case 'login': return this.login;
+            case 'nameSearch': return this.nameSearch
             default: return this.index;
+
         }
+    }
+    async nameSearch() {
+        let { keyword } = this.ctx.query;
+        let users = await this.db.userModel.find({ nickname: new RegExp(keyword, 'g') }).exec();
+        this.ctx.body = { ok: true, data: users };
     }
     async login() {
         let { username, password } = this.ctx.request.body;
@@ -121,8 +128,8 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
         let _id = this.ctx.query.userId;
 
         let user = await this.db.userModel.findById(_id).exec();//返回数据     
-        let tasks = await this.db.taskModel.find({ publisher: user._id.toString() }).exec();//子栏目
-        let getMoneyRequests = await this.db.getMoneyRequestModel.find({ user: _id }).populate('user').exec();
+
+
         let tree = {
             level1Parent: null,
             level2Parent: null,
@@ -131,15 +138,20 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             level2Children: [],
             level3Children: [],
         }
+        await user.populate('parent').execPopulate();
+
         //查上三级
         if (user.parent) {
-            await user.populate('parent').execPopulate();
+
+            console.log('查找到一级师傅', user.parent);
+            console.log('查找到一级师傅', user.parent);
+
             tree.level1Parent = user.parent;
+            await user.parent.populate('parent').execPopulate();;
             if (user.parent.parent) {
-                await user.parent.populate('parent').execPopulate();;
                 tree.level2Parent = user.parent.parent;
+                await user.parent.parent.populate('parent').execPopulate();;
                 if (user.parent.parent.parent) {
-                    await user.parent.parent.populate('parent').execPopulate();;
                     tree.level3Parent = user.parent.parent.parent;
                 }
             }
@@ -155,13 +167,12 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
             console.log(childrenIds);
             tree.level3Children = await this.db.userModel.find({ parent: { $in: childrenIds } }).exec();
         }
-
+        console.log(tree);
         this.ctx.body = {
             ok: true,
             data: {
-                user,
-                tasks,
-                getMoneyRequests,
+
+
                 tree
             }
         }

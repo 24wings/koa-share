@@ -144,7 +144,12 @@ let default_1 = class extends lib_1.Core.Route.BaseRoute {
     }
     */
     async getJSSDKSignature() {
-        let jssdk = await app_config_1.default.wxApi.jssdk({ url: this.ctx.request.body.url });
+        let jssdk = await app_config_1.default.wxApi.jssdk({
+            url: //'http://wq8.youqulexiang.com/share/taskDetail'
+            this.ctx.request.body.url
+        });
+        console.log('jssdk:url', this.ctx.request.body.url);
+        console.log('jssdk:href', this.ctx.href);
         this.ctx.body = { ok: true, data: jssdk };
     }
 };

@@ -142,7 +142,13 @@ export default class extends Core.Route.BaseRoute implements Core.Route.IRoute {
     */
 
     async getJSSDKSignature() {
-        let jssdk = await config.wxApi.jssdk({ url: this.ctx.request.body.url });
+        let jssdk = await config.wxApi.jssdk({
+            url: //'http://wq8.youqulexiang.com/share/taskDetail'
+            this.ctx.request.body.url
+        });
+        console.log('jssdk:url', this.ctx.request.body.url)
+        console.log('jssdk:href', this.ctx.href);
+
         this.ctx.body = { ok: true, data: jssdk };
     }
 }

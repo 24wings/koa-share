@@ -141,29 +141,23 @@ let server = app
     .use(bodyparser({ jsonLimit: '50mb', formLimit: '50mb' }))
     .use(router.routes())
     .use(router.allowedMethods());
-// 
-// const cluster = require('cluster');
-// const numCPUs = require('os').cpus().length;
-/*
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
-
     // Fork workers.
     for (let i = 0; i < numCPUs; i++) {
         cluster.fork();
     }
-
     cluster.on('exit', (worker, code, signal) => {
         console.log(`worker ${worker.process.pid} died`);
     });
-} else {
+}
+else {
     // Workers can share any TCP connection
     // In this case it is an HTTP server
-    
-
+    server.listen(80, () => {
+        console.log('server is running on 80');
+    });
     console.log(`Worker ${process.pid} started`);
 }
-*/
-server.listen(80, () => {
-    console.log('server is running on 80');
-});
